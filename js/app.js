@@ -88,10 +88,13 @@
     const dot=summary.querySelector(`[data-dot="${i}"]`);
     const chipV=summary.querySelector(`[data-chip="${i}"]`);
     const badge=grid.querySelector(`[data-badgewrap="${i}"]`);
+    const card=grid.querySelector(`[data-card="${i}"]`);
     if(!r){ dot.className='dot'; chipV.textContent='—'; badge.className='badge';
+      delete card.dataset.status;
       $(`[data-rv="${i}"]`).textContent='—'; $(`[data-rl="${i}"]`).textContent='請輸入數字';
       $(`[data-rsub="${i}"]`).innerHTML=''; $(`[data-badge="${i}"]`).textContent='—'; return; }
     dot.className='dot '+r.status; chipV.textContent=r.chip;
+    card.dataset.status=r.status;
     badge.className='badge '+r.status;
     $(`[data-rl="${i}"]`).textContent=r.main.label;
     $(`[data-rv="${i}"]`).textContent=r.main.value;
@@ -135,7 +138,7 @@
     if(!form.checkValidity()){form.reportValidity();return;}
     const button=form.querySelector('button[type="submit"]');
     const data=new FormData(form);
-    const original=button.textContent;
+    const original=button.innerHTML;
     button.disabled=true;
     button.textContent="正在整理並寄送報告…";
     formStatus.className="form-status";
@@ -162,7 +165,7 @@
       formStatus.className="form-status error";
       formStatus.textContent=error&&error.message?error.message:"目前無法寄送，請稍後再試。";
       button.disabled=false;
-      button.textContent=original;
+      button.innerHTML=original;
     }
   });
 })();

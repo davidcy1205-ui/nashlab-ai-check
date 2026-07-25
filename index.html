@@ -30,34 +30,100 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260725-4" />
+<link rel="stylesheet" href="css/style.css?v=20260725-5" />
 </head>
 <body>
-<header>
-  <img class="logo" src="assets/logo.png" alt="Nash Lab 納許實驗室">
-  <div class="eyebrow">Nash Lab · 老闆生意課</div>
-  <h1>導入 AI 前，先算清楚的<br><span class="hl">5 個數字</span></h1>
-  <p class="sub">補助拿了、AI 也導了，這 5 個數字你算過嗎？填入實際數字，燈號會即時告訴你哪裡健康、哪裡危險，善用納許科技的AI導入試算器，精準規劃自己AI導入的投資報酬率吧！</p>
-  <div class="summary" id="summary"></div>
+<header class="hero">
+  <div class="hero-shell">
+    <nav class="site-nav" aria-label="品牌導覽">
+      <a class="brand" href="./" aria-label="Nash Lab AI 導入補助健檢首頁">
+        <img class="logo" src="assets/logo.png" alt="Nash Lab 納許科技">
+      </a>
+      <div class="nav-meta">
+        <span>免費企業工具</span>
+        <span class="nav-live"><i></i>即時計算</span>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><span>NASH LAB TOOLS</span><i></i><span>AI 導入投資健檢</span></div>
+        <h1>導入 AI 前，先算清楚的<br><span class="hl">5 個關鍵數字</span></h1>
+        <p class="sub">補助拿了、AI 也導了，這 5 個數字你算過嗎？填入實際數字，燈號會即時告訴你哪裡健康、哪裡危險。善用納許科技的 AI 導入試算器，精準規劃自己的投資報酬率。</p>
+        <div class="hero-points" aria-label="工具特色">
+          <span><i>✓</i>免註冊試算</span>
+          <span><i>✓</i>結果即時更新</span>
+          <span><i>✓</i>完整報告寄到信箱</span>
+        </div>
+      </div>
+
+      <aside class="summary-panel" aria-label="五項即時計算摘要">
+        <div class="summary-head">
+          <div>
+            <span class="summary-kicker">LIVE OVERVIEW</span>
+            <h2>你的 AI 導入儀表板</h2>
+          </div>
+          <span class="summary-live"><i></i>LIVE</span>
+        </div>
+        <div class="summary" id="summary" aria-live="polite"></div>
+        <p class="summary-note">修改下方任一數字，這裡會同步更新。</p>
+      </aside>
+    </div>
+  </div>
 </header>
 
-<div class="wrap">
-  <div class="toolbar">
-    <div class="legend">
-      <span><i class="sw" style="background:var(--good)"></i>優秀</span>
-      <span><i class="sw" style="background:var(--warn)"></i>注意</span>
-      <span><i class="sw" style="background:var(--danger)"></i>危險</span>
-      <span style="color:var(--muted2)">· 改數字，結果即時更新</span>
+<main class="wrap">
+  <section class="process" aria-label="使用方式">
+    <div class="process-item">
+      <span class="process-num">01</span>
+      <div><strong>填入實際數字</strong><p>用公司的真實成本與使用狀況試算</p></div>
     </div>
-    <button class="reset" id="reset">還原範例數字</button>
-  </div>
-  <div class="grid" id="grid"></div>
+    <div class="process-item">
+      <span class="process-num">02</span>
+      <div><strong>查看健康燈號</strong><p>快速找到值得改善的投資指標</p></div>
+    </div>
+    <div class="process-item">
+      <span class="process-num">03</span>
+      <div><strong>取得完整報告</strong><p>把計算結果與補助方向帶回公司</p></div>
+    </div>
+  </section>
+
+  <section class="calculator-section" aria-labelledby="calculator-title">
+    <div class="section-head">
+      <div class="section-copy">
+        <span class="section-kicker">LIVE CALCULATOR</span>
+        <h2 id="calculator-title">輸入數字，立即看見導入效益</h2>
+        <p>每張卡片代表一個 AI 導入決策指標；調整數字後，計算結果與燈號會即時更新。</p>
+      </div>
+      <div class="section-tools">
+        <div class="legend" aria-label="燈號說明">
+          <span><i class="sw" style="background:var(--good)"></i>優秀</span>
+          <span><i class="sw" style="background:var(--warn)"></i>注意</span>
+          <span><i class="sw" style="background:var(--danger)"></i>危險</span>
+        </div>
+        <button class="reset" id="reset">還原範例數字</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
 
   <section class="cta">
     <div class="cta-inner">
-      <h3>算完了，那我可以用什麼補助呢？</h3>
-      <p>想知道如何選擇適合自己上述計算結果的補助嗎？可以來使用納許科技的政府補助配對器，幫自己找到最適合的補助。輸入聯絡資料，我們會把上述的計算報告與補助配對表傳給你！</p>
+      <div class="cta-copy">
+        <span class="cta-kicker">NASH LAB · GOVERNMENT GRANT MATCH</span>
+        <h3>算完了，那我可以用什麼補助呢？</h3>
+        <p>想知道如何選擇適合上述計算結果的補助嗎？納許科技的政府補助配對器會協助你比對九種常見方案，找到更適合的申請方向。</p>
+        <div class="cta-benefits" aria-label="報告內容">
+          <span><i>1</i>五項 AI 導入計算報告</span>
+          <span><i>2</i>紅、黃、綠健康燈號整理</span>
+          <span><i>3</i>九種政府補助配對入口</span>
+        </div>
+      </div>
       <form class="lead-form" id="lead-form">
+        <div class="form-head">
+          <strong>免費取得個人化報告</strong>
+          <span>填寫資料後，報告會直接寄到你的 Email</span>
+        </div>
         <div class="lead-fields">
           <label class="lead-field">
             <span>公司或品牌名稱</span>
@@ -76,19 +142,27 @@
           <span>Website</span>
           <input type="text" name="website" tabindex="-1" autocomplete="off">
         </label>
-        <button class="pill" type="submit">九種補助，一次配對</button>
+        <button class="pill" type="submit"><span>九種補助，一次配對</span><i aria-hidden="true">→</i></button>
         <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
         <p class="form-note">送出即表示同意我們使用上述資料寄送本次健檢報告與補助配對資訊；詳見<a href="https://nashlab.tech/privacy-policy/" target="_blank" rel="noopener">隱私權政策</a>。</p>
       </form>
     </div>
   </section>
-</div>
+</main>
 
 <footer>
-  <img class="flogo" src="assets/logo.png" alt="Nash Lab">
-  <div class="handle">@nash_lab2025</div>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img class="flogo" src="assets/logo.png" alt="Nash Lab 納許科技">
+      <p>AI 導入・流程自動化・政府補助策略</p>
+    </div>
+    <div class="footer-meta">
+      <span>@nash_lab2025</span>
+      <a href="https://nashlab.tech/privacy-policy/" target="_blank" rel="noopener">隱私權政策</a>
+    </div>
+  </div>
   <p class="disc">本工具為即時試算，數字僅供內部評估參考；實際補助資格與金額以各主管機關公告及個案審查為準。</p>
 </footer>
-<script src="js/app.js?v=20260725-4"></script>
+<script src="js/app.js?v=20260725-5"></script>
 </body>
 </html>
