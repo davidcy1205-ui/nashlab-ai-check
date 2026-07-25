@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 導入補助健檢｜納許實驗室 Nash Lab</title>
+<meta name="description" content="免費工具：導入 AI 前，先算清楚 ROI、補助槓桿、採用率、回本月數、時間成本這 5 個數字。填入你的實際數字，紅黃綠燈號即時告訴你哪裡健康、哪裡危險。" />
+<link rel="canonical" href="https://tools.nashlab.tech/" />
+<meta name="theme-color" content="#D07100" />
+<!-- Open Graph / 社群分享預覽 -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Nash Lab 納許實驗室" />
+<meta property="og:title" content="導入 AI 前，先算清楚的 5 個數字｜免費健檢工具" />
+<meta property="og:description" content="補助拿了、AI 也導了，這 5 個數字你算過嗎？填入數字，30 秒看出你哪一盞是紅燈。" />
+<meta property="og:url" content="https://tools.nashlab.tech/" />
+<meta property="og:image" content="https://tools.nashlab.tech/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="zh_TW" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="導入 AI 前，先算清楚的 5 個數字｜免費健檢工具" />
+<meta name="twitter:description" content="補助拿了、AI 也導了，這 5 個數字你算過嗎？30 秒看出你哪一盞是紅燈。" />
+<meta name="twitter:image" content="https://tools.nashlab.tech/assets/og-image.png" />
+<!-- Icons -->
+<link rel="icon" href="assets/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <img class="logo" src="assets/logo.png" alt="Nash Lab 納許實驗室">
+  <div class="eyebrow">Nash Lab · 老闆生意課</div>
+  <h1>導入 AI 前，先算清楚的<br><span class="hl">5 個數字</span></h1>
+  <p class="sub">補助拿了、AI 也導了，這 5 個數字你算過嗎？填入實際數字，燈號會即時告訴你哪裡健康、哪裡危險。</p>
+  <div class="summary" id="summary"></div>
+</header>
+
+<div class="wrap">
+  <div class="toolbar">
+    <div class="legend">
+      <span><i class="sw" style="background:var(--good)"></i>優秀</span>
+      <span><i class="sw" style="background:var(--warn)"></i>注意</span>
+      <span><i class="sw" style="background:var(--danger)"></i>危險</span>
+      <span style="color:var(--muted2)">· 改數字，結果即時更新</span>
+    </div>
+    <button class="reset" id="reset">還原範例數字</button>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <section class="cta">
+    <div class="cta-inner">
+      <h3>算完了，哪一盞是紅燈？</h3>
+      <p>想知道怎麼把紅燈轉綠、又能對到適用補助？把你的數字交給納許實驗室，我們直接幫你看。</p>
+      <a class="pill" href="#" onclick="return false;">留言「補助」，領完整導入評估</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <img class="flogo" src="assets/logo.png" alt="Nash Lab">
+  <div class="handle">@nash_lab2025</div>
+  <p class="disc">本工具為即時試算，數字僅供內部評估參考；實際補助資格與金額以各主管機關公告及個案審查為準。</p>
+</footer>
+<script src="js/app.js"></script>
+</body>
+</html>
