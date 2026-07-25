@@ -122,7 +122,8 @@
   }
 
   const leadForm=$("#lead-form");
-  leadForm.addEventListener("submit",()=>{
+  leadForm.addEventListener("submit",async e=>{
+    e.preventDefault();
     leadForm.querySelectorAll("[data-report-field]").forEach(el=>el.remove());
     const lines=CALCS.map(reportLine);
     lines.forEach((line,i)=>{
@@ -140,21 +141,30 @@
     matcher.dataset.reportField="true";
     leadForm.appendChild(matcher);
 
-    const contact=$("#contact").value.trim();
-    $("#autoresponse").value=[
-      `${contact} 您好，`,
-      "",
-      "謝謝你使用納許科技的 AI 導入試算器。以下是本次五項計算報告：",
-      "",
-      ...lines,
-      "",
-      "九種政府補助一次配對：",
-      "https://sbir.nashlab.tech",
-      "",
-      "提醒：本報告為即時試算，僅供內部評估參考；實際補助資格與金額以各主管機關公告及個案審查為準。",
-      "",
-      "納許科技 Nash Lab"
-    ].join("\n");
+    $("#cc-recipient").value=$("#email").value.trim();
+    const button=leadForm.querySelector('button[type="submit"]');
+    const status=$("#form-status");
+    const originalLabel=button.textContent;
+    button.disabled=true;
+    button.textContent="正在寄送報告…";
+    status.className="form-status";
+    status.textContent="";
+
+    try{
+      const response=await fetch(leadForm.action,{
+        method:"POST",
+        body:new FormData(leadForm),
+        headers:{Accept:"application/json"}
+      });
+      const data=await response.json();
+      if(!response.ok||String(data.success)!=="true")throw new Error(data.message||"送出失敗");
+      window.location.assign("thanks.html");
+    }catch(error){
+      status.className="form-status error";
+      status.textContent="報告暫時無法寄出，請稍後再試，或來信 service@nashlab.tech。";
+      button.disabled=false;
+      button.textContent=originalLabel;
+    }
   });
 
   CALCS.forEach((c,i)=>c.inputs.forEach(x=>{if(x.money)$(`#f${i}_${x.key}`).value=nf.format(x.def);}));
