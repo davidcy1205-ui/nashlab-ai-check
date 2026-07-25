@@ -81,8 +81,10 @@
   });
 
   const state=CALCS.map(c=>{const o={};c.inputs.forEach(x=>o[x.key]=x.def);return o;});
+  const latest=CALCS.map(()=>null);
   function render(i){
     const r=CALCS[i].compute(state[i]);
+    latest[i]=r;
     const dot=summary.querySelector(`[data-dot="${i}"]`);
     const chipV=summary.querySelector(`[data-chip="${i}"]`);
     const badge=grid.querySelector(`[data-badgewrap="${i}"]`);
@@ -106,6 +108,54 @@
     if(t.dataset.money==="1"){t.value=String(parse(t.value)||'');}},true);
   $("#reset").addEventListener('click',()=>{CALCS.forEach((c,i)=>c.inputs.forEach(x=>{
     state[i][x.key]=x.def; $(`#f${i}_${x.key}`).value=x.money?nf.format(x.def):x.def;}));all();});
+
+  function reportLine(c,i){
+    const r=latest[i];
+    const inputs=c.inputs.map(inp=>{
+      const value=state[i][inp.key];
+      const shown=inp.money?fmt.money(value):`${nf.format(value)} ${inp.unit}`;
+      return `${inp.label}：${shown}`;
+    }).join("；");
+    if(!r)return `${c.num}. ${c.title}｜尚未產生有效結果｜${inputs}`;
+    const details=(r.sub||[]).map(row=>`${row[0]}：${row[1]}`).join("；");
+    return `${c.num}. ${c.title}｜${r.main.label}：${r.main.value}｜燈號：${word(r.status)}${details?`｜${details}`:""}｜輸入：${inputs}`;
+  }
+
+  const leadForm=$("#lead-form");
+  leadForm.addEventListener("submit",()=>{
+    leadForm.querySelectorAll("[data-report-field]").forEach(el=>el.remove());
+    const lines=CALCS.map(reportLine);
+    lines.forEach((line,i)=>{
+      const hidden=document.createElement("input");
+      hidden.type="hidden";
+      hidden.name=`計算報告 ${i+1}｜${CALCS[i].title}`;
+      hidden.value=line;
+      hidden.dataset.reportField="true";
+      leadForm.appendChild(hidden);
+    });
+    const matcher=document.createElement("input");
+    matcher.type="hidden";
+    matcher.name="政府補助配對器";
+    matcher.value="https://sbir.nashlab.tech";
+    matcher.dataset.reportField="true";
+    leadForm.appendChild(matcher);
+
+    const contact=$("#contact").value.trim();
+    $("#autoresponse").value=[
+      `${contact} 您好，`,
+      "",
+      "謝謝你使用納許科技的 AI 導入試算器。以下是本次五項計算報告：",
+      "",
+      ...lines,
+      "",
+      "九種政府補助一次配對：",
+      "https://sbir.nashlab.tech",
+      "",
+      "提醒：本報告為即時試算，僅供內部評估參考；實際補助資格與金額以各主管機關公告及個案審查為準。",
+      "",
+      "納許科技 Nash Lab"
+    ].join("\n");
+  });
 
   CALCS.forEach((c,i)=>c.inputs.forEach(x=>{if(x.money)$(`#f${i}_${x.key}`).value=nf.format(x.def);}));
   all();

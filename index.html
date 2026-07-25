@@ -55,9 +55,32 @@
 
   <section class="cta">
     <div class="cta-inner">
-      <h3>算完了，哪一盞是紅燈？</h3>
-      <p>想知道怎麼把紅燈轉綠、又能對到適用補助？把你的數字交給納許實驗室，我們直接幫你看。</p>
-      <a class="pill" href="#" onclick="return false;">留言「補助」，領完整導入評估</a>
+      <h3>算完了，那我可以用什麼補助呢？</h3>
+      <p>想知道如何選擇適合自己上述計算結果的補助嗎？可以來使用納許科技的政府補助配對器，幫自己找到最適合的補助，輸入聯絡資料，我們會把上述的計算報告與補助配對表傳給你！</p>
+      <form id="lead-form" class="lead-form" action="https://formsubmit.co/service@nashlab.tech" method="POST">
+        <div class="lead-fields">
+          <label class="lead-field" for="company">
+            <span>公司或品牌名稱</span>
+            <input id="company" name="公司或品牌名稱" type="text" autocomplete="organization" maxlength="80" required>
+          </label>
+          <label class="lead-field" for="contact">
+            <span>聯絡人稱呼</span>
+            <input id="contact" name="聯絡人稱呼" type="text" autocomplete="name" maxlength="50" required>
+          </label>
+          <label class="lead-field lead-field-email" for="email">
+            <span>Email</span>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required>
+          </label>
+        </div>
+        <input type="hidden" name="_subject" value="AI 導入試算器｜新的補助配對名單">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://davidcy1205-ui.github.io/nashlab-ai-check/thanks.html">
+        <input type="hidden" name="_url" value="https://davidcy1205-ui.github.io/nashlab-ai-check/">
+        <input type="hidden" id="autoresponse" name="_autoresponse" value="">
+        <input class="form-honey" type="text" name="_honey" tabindex="-1" autocomplete="off">
+        <button class="pill" type="submit">九種補助，一次配對</button>
+        <p class="form-note">送出後，計算報告與補助配對器連結會寄到你的 Email。送出即表示同意納許科技依<a href="https://nashlab.tech/privacy-policy/" target="_blank" rel="noopener">隱私權政策</a>處理本次資料。</p>
+      </form>
     </div>
   </section>
 </div>
