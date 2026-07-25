@@ -151,7 +151,8 @@
     status.textContent="";
 
     try{
-      const response=await fetch(leadForm.action,{
+      const endpoint=leadForm.action.replace("https://formsubmit.co/","https://formsubmit.co/ajax/");
+      const response=await fetch(endpoint,{
         method:"POST",
         body:new FormData(leadForm),
         headers:{Accept:"application/json"}
