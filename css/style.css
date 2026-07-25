@@ -571,14 +571,23 @@ footer{width:min(1160px,calc(100% - 40px));margin:0 auto;padding:38px 0 44px}
   .hero-grid{gap:34px;padding:45px 2px 4px}
   .eyebrow{font-size:10px;letter-spacing:.11em}
   h1{
-    font-size:clamp(18px,4.6vw,28px);
-    letter-spacing:-.075em;
-    line-height:1.2;
+    font-size:clamp(27px,7.4vw,38px);
+    letter-spacing:-.07em;
+    line-height:1.16;
+  }
+  .hero-copy h1 br{display:block}
+  .headline-main{
+    display:block;
+    font-size:1em;
+    letter-spacing:inherit;
     white-space:nowrap;
   }
-  .hero-copy h1 br{display:none}
-  .headline-main{display:inline;font-size:1em;letter-spacing:inherit;white-space:nowrap}
-  h1 .hl{display:inline;margin-top:0;margin-left:.14em}
+  h1 .hl{
+    display:block;
+    margin-top:7px;
+    margin-left:0;
+    white-space:nowrap;
+  }
 
   .sub{font-size:15px;line-height:1.8}
   .hero-points{gap:9px 14px;margin-top:22px}
