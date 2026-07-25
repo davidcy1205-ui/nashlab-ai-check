@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260725-3" />
+<link rel="stylesheet" href="css/style.css?v=20260725-4" />
 </head>
 <body>
 <header>
@@ -56,8 +56,30 @@
   <section class="cta">
     <div class="cta-inner">
       <h3>算完了，那我可以用什麼補助呢？</h3>
-      <p>想知道如何選擇適合自己上述計算結果的補助嗎？可以使用納許科技的政府補助配對器，幫自己找到最適合的補助。</p>
-      <a class="pill" href="https://sbir.nashlab.tech" target="_blank" rel="noopener">九種補助，一次配對</a>
+      <p>想知道如何選擇適合自己上述計算結果的補助嗎？可以來使用納許科技的政府補助配對器，幫自己找到最適合的補助。輸入聯絡資料，我們會把上述的計算報告與補助配對表傳給你！</p>
+      <form class="lead-form" id="lead-form">
+        <div class="lead-fields">
+          <label class="lead-field">
+            <span>公司或品牌名稱</span>
+            <input type="text" name="company" autocomplete="organization" maxlength="100" required>
+          </label>
+          <label class="lead-field">
+            <span>聯絡人稱呼</span>
+            <input type="text" name="contact" autocomplete="name" maxlength="60" required>
+          </label>
+          <label class="lead-field lead-field-email">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" inputmode="email" maxlength="160" required>
+          </label>
+        </div>
+        <label class="form-honey" aria-hidden="true">
+          <span>Website</span>
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </label>
+        <button class="pill" type="submit">九種補助，一次配對</button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+        <p class="form-note">送出即表示同意我們使用上述資料寄送本次健檢報告與補助配對資訊；詳見<a href="https://nashlab.tech/privacy-policy/" target="_blank" rel="noopener">隱私權政策</a>。</p>
+      </form>
     </div>
   </section>
 </div>
@@ -67,6 +89,6 @@
   <div class="handle">@nash_lab2025</div>
   <p class="disc">本工具為即時試算，數字僅供內部評估參考；實際補助資格與金額以各主管機關公告及個案審查為準。</p>
 </footer>
-<script src="js/app.js?v=20260725-3"></script>
+<script src="js/app.js?v=20260725-4"></script>
 </body>
 </html>

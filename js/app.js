@@ -81,8 +81,10 @@
   });
 
   const state=CALCS.map(c=>{const o={};c.inputs.forEach(x=>o[x.key]=x.def);return o;});
+  const latest=CALCS.map(()=>null);
   function render(i){
     const r=CALCS[i].compute(state[i]);
+    latest[i]=r;
     const dot=summary.querySelector(`[data-dot="${i}"]`);
     const chipV=summary.querySelector(`[data-chip="${i}"]`);
     const badge=grid.querySelector(`[data-badgewrap="${i}"]`);
@@ -109,4 +111,58 @@
 
   CALCS.forEach((c,i)=>c.inputs.forEach(x=>{if(x.money)$(`#f${i}_${x.key}`).value=nf.format(x.def);}));
   all();
+
+  const reportEndpoint="https://nashlab-ai-report-mailer.david-cy1205.chatgpt.site/api/send-report";
+  const form=$("#lead-form"), formStatus=$("#form-status");
+  const reportInput=(inp,value)=>inp.money?fmt.money(value):nf.format(value)+" "+inp.unit;
+  const buildReports=()=>CALCS.map((c,i)=>{
+    const r=latest[i];
+    return{
+      mainLabel:r?r.main.label:"計算結果",
+      mainValue:r?r.main.value:"—",
+      details:r?(r.sub||[]).map(row=>row[0]+"："+row[1]).join("；"):"請確認輸入數字",
+      inputs:c.inputs.map(inp=>inp.label+"："+reportInput(inp,state[i][inp.key])).join("；"),
+      status:r?r.status:"warn"
+    };
+  });
+  const submissionId=()=>{
+    if(window.crypto&&typeof window.crypto.randomUUID==="function")return window.crypto.randomUUID();
+    return Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
+  };
+
+  form.addEventListener("submit",async e=>{
+    e.preventDefault();
+    if(!form.checkValidity()){form.reportValidity();return;}
+    const button=form.querySelector('button[type="submit"]');
+    const data=new FormData(form);
+    const original=button.textContent;
+    button.disabled=true;
+    button.textContent="正在整理並寄送報告…";
+    formStatus.className="form-status";
+    formStatus.textContent="正在產生你的五項健檢報告，請稍候。";
+    try{
+      const response=await fetch(reportEndpoint,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          company:String(data.get("company")||"").trim(),
+          contact:String(data.get("contact")||"").trim(),
+          email:String(data.get("email")||"").trim(),
+          website:String(data.get("website")||""),
+          submissionId:submissionId(),
+          reports:buildReports()
+        })
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok)throw new Error(result.message||"目前無法寄送，請稍後再試。");
+      formStatus.className="form-status success";
+      formStatus.textContent="寄送成功！正在帶你前往政府補助配對表。";
+      window.setTimeout(()=>{window.location.href="thanks.html";},650);
+    }catch(error){
+      formStatus.className="form-status error";
+      formStatus.textContent=error&&error.message?error.message:"目前無法寄送，請稍後再試。";
+      button.disabled=false;
+      button.textContent=original;
+    }
+  });
 })();
