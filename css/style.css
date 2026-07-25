@@ -573,7 +573,7 @@ footer{width:min(1160px,calc(100% - 40px));margin:0 auto;padding:38px 0 44px}
   h1{
     font-size:clamp(27px,7.4vw,38px);
     letter-spacing:-.07em;
-    line-height:.9;
+    line-height:.82;
   }
   .hero-copy h1 br{display:block}
   .headline-main{
@@ -584,8 +584,10 @@ footer{width:min(1160px,calc(100% - 40px));margin:0 auto;padding:38px 0 44px}
   }
   h1 .hl{
     display:block;
-    margin-top:0;
+    margin-top:-6px;
     margin-left:0;
+    font-size:1.3em;
+    line-height:.82;
     white-space:nowrap;
   }
 
