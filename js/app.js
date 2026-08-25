@@ -80,8 +80,75 @@
     grid.appendChild(card);
   });
 
+  const overallCard=document.createElement("div");
+  overallCard.className="card overall-card";
+  overallCard.innerHTML='<div class="card-h"><span class="numchip">6</span><div><h2>整體投資報酬率</h2><div class="tag">補助、採用率與總效益一起計算</div></div></div>'+
+    '<div class="fields overall-fields"><div class="field"><label>補助後實際投資</label><strong id="overall-self">—</strong></div>'+
+    '<div class="field"><label>採用率調整後月效益</label><strong id="overall-monthly">—</strong></div></div>'+
+    '<button class="overall-button" id="calculate-overall" type="button"><span>計算整體投資報酬率</span><i aria-hidden="true">→</i></button>'+
+    '<div class="result"><div class="rlead">整體計算結果</div><div class="rmain"><span class="rl" id="overall-label">點擊按鈕取得結果</span>'+
+    '<span class="rv" id="overall-value">—</span></div><div class="rsub" id="overall-sub"></div></div>'+
+    '<div class="verdict"><span class="badge" id="overall-badge"><span class="bd"></span><span id="overall-badge-text">尚未計算</span></span>'+
+    '<span class="target">目標　首年 ROI ≥ 20%、12 個月內回本</span></div>';
+  grid.appendChild(overallCard);
+
   const state=CALCS.map(c=>{const o={};c.inputs.forEach(x=>o[x.key]=x.def);return o;});
   const latest=CALCS.map(()=>null);
+  let overallLatest=null;
+  let overallWasCalculated=false;
+
+  const computeOverall=()=>{
+    const total=state[1].total, grant=state[1].grant, self=total-grant;
+    const need=state[2].need, use=state[2].use;
+    if(total<=0||self<=0||need<=0)return null;
+    const adoption=Math.min(Math.max(use/need,0),1);
+    const monthly=Math.max(state[0].save,0)*adoption;
+    if(monthly<=0)return null;
+    const annual=monthly*12, roi=(annual-self)/self, payback=self/monthly;
+    const timeValue=Math.max((state[4].hb-state[4].ha)*state[4].wage,0);
+    const identified=Math.max(state[3].msave,0)+timeValue;
+    const status=roi>=0.2?"good":(roi>=0?"warn":"danger");
+    return{
+      main:{label:"採用率調整後首年 ROI",value:fmt.pct(roi)},
+      sub:[
+        ["年度可實現效益",fmt.money(annual)],
+        ["整體回本月數",fmt.months(payback)],
+        ["首年淨效益",fmt.money(annual-self)],
+        ["效益拆解參考（不重複加總）",fmt.money(identified)+" / 月"]
+      ],
+      self:self, monthly:monthly, annual:annual, adoption:adoption,
+      chip:fmt.pct(roi), status:status
+    };
+  };
+
+  const clearOverall=message=>{
+    overallLatest=null;
+    delete overallCard.dataset.status;
+    $("#overall-self").textContent="—";
+    $("#overall-monthly").textContent="—";
+    $("#overall-label").textContent=message;
+    $("#overall-value").textContent="—";
+    $("#overall-sub").innerHTML="";
+    $("#overall-badge").className="badge";
+    $("#overall-badge-text").textContent=overallWasCalculated?"待重新計算":"尚未計算";
+  };
+
+  const renderOverall=()=>{
+    const r=computeOverall();
+    overallWasCalculated=true;
+    if(!r){clearOverall("請先確認前五項資料");return;}
+    overallLatest=r;
+    overallCard.dataset.status=r.status;
+    $("#overall-self").textContent=fmt.money(r.self);
+    $("#overall-monthly").textContent=fmt.money(r.monthly);
+    $("#overall-label").textContent=r.main.label;
+    $("#overall-value").textContent=r.main.value;
+    $("#overall-sub").innerHTML=r.sub.map(row=>'<span class="row"><span>'+row[0]+'</span><span class="v">'+row[1]+'</span></span>').join("");
+    $("#overall-badge").className="badge "+r.status;
+    $("#overall-badge-text").textContent=word(r.status);
+  };
+
+  $("#calculate-overall").addEventListener("click",renderOverall);
   function render(i){
     const r=CALCS[i].compute(state[i]);
     latest[i]=r;
@@ -116,30 +183,51 @@
       render(0);
     }
     render(i);
+    clearOverall(overallWasCalculated?"資料已更新，請重新計算":"點擊按鈕取得結果");
   });
   grid.addEventListener('blur',e=>{const t=e.target;if(!t.dataset||t.dataset.k===undefined)return;
     if(t.dataset.money==="1"){const n=parse(t.value);t.value=n?nf.format(n):'';}},true);
   grid.addEventListener('focus',e=>{const t=e.target;if(!t.dataset||t.dataset.k===undefined)return;
     if(t.dataset.money==="1"){t.value=String(parse(t.value)||'');}},true);
   $("#reset").addEventListener('click',()=>{CALCS.forEach((c,i)=>c.inputs.forEach(x=>{
-    state[i][x.key]=x.def; $(`#f${i}_${x.key}`).value=x.money?nf.format(x.def):x.def;}));all();});
+    state[i][x.key]=x.def; $(`#f${i}_${x.key}`).value=x.money?nf.format(x.def):x.def;}));all();
+    overallWasCalculated=false;
+    clearOverall("點擊按鈕取得結果");
+  });
 
   CALCS.forEach((c,i)=>c.inputs.forEach(x=>{if(x.money)$(`#f${i}_${x.key}`).value=nf.format(x.def);}));
   all();
+  clearOverall("點擊按鈕取得結果");
 
   const reportEndpoint="https://nashlab-ai-report-mailer.david-cy1205.chatgpt.site/api/send-report";
   const form=$("#lead-form"), formStatus=$("#form-status");
   const reportInput=(inp,value)=>inp.money?fmt.money(value):nf.format(value)+" "+inp.unit;
-  const buildReports=()=>CALCS.map((c,i)=>{
-    const r=latest[i];
-    return{
-      mainLabel:r?r.main.label:"計算結果",
+  const buildReports=()=>{
+    const reports=CALCS.map((c,i)=>{
+      const r=latest[i];
+      return{
+        mainLabel:r?r.main.label:"計算結果",
+        mainValue:r?r.main.value:"—",
+        details:r?(r.sub||[]).map(row=>row[0]+"："+row[1]).join("；"):"請確認輸入數字",
+        inputs:c.inputs.map(inp=>inp.label+"："+reportInput(inp,state[i][inp.key])).join("；"),
+        status:r?r.status:"warn"
+      };
+    });
+    const r=overallLatest||computeOverall();
+    reports.push({
+      mainLabel:r?r.main.label:"整體投資報酬率",
       mainValue:r?r.main.value:"—",
-      details:r?(r.sub||[]).map(row=>row[0]+"："+row[1]).join("；"):"請確認輸入數字",
-      inputs:c.inputs.map(inp=>inp.label+"："+reportInput(inp,state[i][inp.key])).join("；"),
+      details:r?r.sub.map(row=>row[0]+"："+row[1]).join("；"):"請確認前五項資料",
+      inputs:r?[
+        "專案總金額："+fmt.money(state[1].total),
+        "補助後實際投資："+fmt.money(r.self),
+        "實際採用率："+fmt.pct(r.adoption),
+        "採用率調整後月效益："+fmt.money(r.monthly)
+      ].join("；"):"請確認前五項資料",
       status:r?r.status:"warn"
-    };
-  });
+    });
+    return reports;
+  };
   const submissionId=()=>{
     if(window.crypto&&typeof window.crypto.randomUUID==="function")return window.crypto.randomUUID();
     return Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
@@ -154,7 +242,7 @@
     button.disabled=true;
     button.textContent="正在整理並寄送報告…";
     formStatus.className="form-status";
-    formStatus.textContent="正在產生你的五項健檢報告，請稍候。";
+    formStatus.textContent="正在產生你的五項指標與整體 ROI 報告，請稍候。";
     try{
       const response=await fetch(reportEndpoint,{
         method:"POST",
