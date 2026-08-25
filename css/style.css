@@ -402,6 +402,44 @@ h1 .hl{
 .badge.danger{background:var(--danger-soft);color:var(--danger)}
 .badge.danger .bd{background:var(--danger)}
 .target{color:var(--muted);font-size:10.5px;line-height:1.45;text-align:right}
+.overall-fields .field strong{
+  flex:none;
+  color:var(--accent-deep);
+  font-size:14px;
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  text-align:right;
+}
+.overall-button{
+  width:calc(100% - 48px);
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin:16px 24px 0;
+  padding:12px 14px 12px 17px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,#8A460F,var(--accent-deep));
+  color:#fff;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:900;
+  box-shadow:0 10px 24px rgba(111,54,12,.22);
+  transition:transform .16s,background .16s,box-shadow .16s;
+}
+.overall-button i{
+  width:27px;
+  height:27px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:rgba(255,255,255,.15);
+  font-style:normal;
+}
+.overall-button:hover{transform:translateY(-2px);background:linear-gradient(135deg,#71370A,#914809);box-shadow:0 14px 28px rgba(111,54,12,.28)}
+.overall-button:focus-visible{outline:3px solid rgba(169,83,8,.25);outline-offset:3px}
 
 /* ---------- lead capture / grant match ---------- */
 .cta{
@@ -609,6 +647,7 @@ footer{width:min(1160px,calc(100% - 40px));margin:0 auto;padding:38px 0 44px}
   .card-h{padding:23px 20px 9px}
   .fields{padding:4px 20px 0}
   .result{margin:15px 20px 0}
+  .overall-button{width:calc(100% - 40px);margin-left:20px;margin-right:20px}
   .verdict{padding:15px 20px 20px}
   .cta{margin-top:48px;border-radius:24px}
   .cta-inner{gap:30px;padding:34px 20px 22px}
