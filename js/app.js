@@ -11,9 +11,9 @@
   const word=s=>({good:"優秀",warn:"注意",danger:"危險"}[s]);
 
   const CALCS=[
-    {num:1,title:"導入 ROI",tag:"這套 AI 多久幫你賺回來？",
-     inputs:[{key:"cost",label:"導入總成本（自付＋補助）",def:300000,unit:"NTD",money:true},
-             {key:"save",label:"每月省下人力／時間成本",def:40000,unit:"NTD",money:true}],
+    {num:1,title:"整體導入 ROI",tag:"整個 AI 專案首年是否值得？",
+     inputs:[{key:"cost",label:"專案導入總成本（與補助槓桿同步）",def:500000,unit:"NTD",money:true},
+             {key:"save",label:"預估每月總效益（含人力、時間與其他效益）",def:40000,unit:"NTD",money:true}],
      target:"目標　首年 ROI ＞ 0",
      compute(v){ if(v.cost<=0)return null;
        const roi=(v.save*12-v.cost)/v.cost, back=v.save*12/v.cost;
@@ -21,7 +21,7 @@
          sub:[["每 1 元投入帶回",fmt.yuan(back)],["一年省下",fmt.money(v.save*12)]],
          chip:fmt.pct(roi), status:roi>=0.2?"good":(roi>=0?"warn":"danger")};}},
     {num:2,title:"補助槓桿",tag:"1 元自付撬動多少補助？",
-     inputs:[{key:"total",label:"專案總金額",def:500000,unit:"NTD",money:true},
+     inputs:[{key:"total",label:"專案總金額（與導入總成本同步）",def:500000,unit:"NTD",money:true},
              {key:"grant",label:"政府補助金額",def:300000,unit:"NTD",money:true}],
      target:"目標　補助覆蓋率 ＞ 50%",
      compute(v){ const self=v.total-v.grant; if(v.total<=0||self<=0)return null;
@@ -37,21 +37,21 @@
        return{main:{label:"目前採用率",value:fmt.pct(rate)},
          sub:[["實際 / 應使用",Math.round(v.use)+" / "+Math.round(v.need)+" 人"]],
          chip:fmt.pct(rate), status:rate>=0.7?"good":(rate>=0.4?"warn":"danger")};}},
-    {num:4,title:"回本月數",tag:"單一流程幾個月打平？",
-     inputs:[{key:"icost",label:"該流程導入成本",def:120000,unit:"NTD",money:true},
-             {key:"msave",label:"每月省下成本",def:30000,unit:"NTD",money:true}],
-     target:"目標　＜ 12 個月",
+    {num:4,title:"單一流程回本",tag:"代表流程幾個月可以打平？",
+     inputs:[{key:"icost",label:"代表流程導入成本（已含於專案總成本）",def:120000,unit:"NTD",money:true},
+             {key:"msave",label:"代表流程每月省下成本（已含於總效益）",def:30000,unit:"NTD",money:true}],
+     target:"目標　代表流程＜ 12 個月",
      compute(v){ if(v.msave<=0)return null; const m=v.icost/v.msave;
        return{main:{label:"回本月數",value:fmt.months(m)},
          sub:[["一年省下",fmt.money(v.msave*12)]],
          chip:fmt.months(m), status:m<=12?"good":(m<=24?"warn":"danger")};}},
-    {num:5,title:"時間成本",tag:"AI 省下的時間，換算成錢是多少？",
-     inputs:[{key:"hb",label:"導入前每月工時",def:80,unit:"小時"},
-             {key:"ha",label:"導入後每月工時",def:40,unit:"小時"},
-             {key:"wage",label:"你的時薪（估）",def:1500,unit:"NTD",money:true}],
-     target:"目標　省下工時 ＞ 0、時薪逐月變高",
+    {num:5,title:"時間效益",tag:"拆解總效益中的時間價值",
+     inputs:[{key:"hb",label:"導入前每月投入工時",def:80,unit:"小時"},
+             {key:"ha",label:"導入後每月投入工時",def:40,unit:"小時"},
+             {key:"wage",label:"人力時薪（估）",def:1500,unit:"NTD",money:true}],
+     target:"說明項目　不重複計入整體 ROI",
      compute(v){ const saveh=v.hb-v.ha, val=saveh*v.wage;
-       return{main:{label:"每月省回時間價值",value:fmt.money(val)},
+       return{main:{label:"每月時間效益（已含於總效益）",value:fmt.money(val)},
          sub:[["每月省下工時",fmt.hours(saveh)],["一年省回",fmt.money(val*12)]],
          chip:fmt.money(val), status:saveh>0?"good":"warn"};}}
   ];
@@ -104,7 +104,19 @@
   const all=()=>CALCS.forEach((_,i)=>render(i));
 
   grid.addEventListener('input',e=>{const t=e.target;if(!t.dataset||t.dataset.k===undefined)return;
-    state[+t.dataset.c][t.dataset.k]=parse(t.value); render(+t.dataset.c);});
+    const i=+t.dataset.c, key=t.dataset.k, value=parse(t.value);
+    state[i][key]=value;
+    if(i===0&&key==="cost"){
+      state[1].total=value;
+      $("#f1_total").value=value?nf.format(value):"";
+      render(1);
+    }else if(i===1&&key==="total"){
+      state[0].cost=value;
+      $("#f0_cost").value=value?nf.format(value):"";
+      render(0);
+    }
+    render(i);
+  });
   grid.addEventListener('blur',e=>{const t=e.target;if(!t.dataset||t.dataset.k===undefined)return;
     if(t.dataset.money==="1"){const n=parse(t.value);t.value=n?nf.format(n):'';}},true);
   grid.addEventListener('focus',e=>{const t=e.target;if(!t.dataset||t.dataset.k===undefined)return;
